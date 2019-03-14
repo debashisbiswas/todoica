@@ -16,7 +16,7 @@ app.post("/", function (request, response) {
   console.log("Calling Habitica API...");
   processHabiticaTodo(request.body.title, request.body.priority);
   console.log("Done triggering.");
-  response.end();  
+  response.end();
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
@@ -31,20 +31,19 @@ function processHabiticaTodo(title, priority){
   switch( priority )
   {
     case "Priority 1":
-      theParsedPriority = 2;
-      break;
+    theParsedPriority = 2;
+    break;
     case "Priority 2":
-      theParsedPriority = 1.5;
-      break;
+    theParsedPriority = 1.5;
+    break;
     case "Priority 3":
-      theParsedPriority = 1;
-      break;
+    theParsedPriority = 1;
+    break;
     default:
-      theParsedPriority = 1;
+    theParsedPriority = 1;
   }
   
-  // add the task and save the id
-  var taskId = 0;
+  // add the task and check it off in the callback function
   request({
     headers: {
       'x-api-user': process.env.HABITICA_USER,
@@ -55,23 +54,20 @@ function processHabiticaTodo(title, priority){
     json: true,
     method: 'POST'
   }, function (error, response, body) {
-     if (!error && response.statusCode == 200) {
-       console.log(body); // Show the response from Habitica
-     }
-    else {
-      console.log(response.statusCode);
-      console.log(body);
-      var parsedBody = JSON.parse(body);
-      taskId = parsedBody.data.id;
+    console.log(`Add task reponse: ${response.statusCode}, success = ${body.success}`);
+    // console.log(body);
+    if(body.success)
+    {
+      scoreHabiticaTask(body.data._id);
     }
   });
-  
-  console.log( "taskId: " + taskId );
-  
-  // check off the task using the saved id
+}
+
+function scoreHabiticaTask(taskId)
+{
+  // check off the task using the id
   if( taskId != 0 )
   {
-    console.log( "taskId was not 0!" );
     // from Habitica API: score a task with https://habitica.com/api/v3/tasks/:taskId/score/:direction
     // allowed values for direction: "up" or "down"
     var theDirection = "up";
@@ -85,13 +81,8 @@ function processHabiticaTodo(title, priority){
       json: true,
       method: 'POST'
     }, function (error, response, body) {
-       if (!error && response.statusCode == 200) {
-         console.log(body); // Show the response from Habitica
-       }
-      else {
-        console.log(response.statusCode);
-        console.log(body);
-      }
+      console.log(`Score task reponse: ${response.statusCode}, success = ${body.success}`);
+      // console.log(body);
     });
   }
 }

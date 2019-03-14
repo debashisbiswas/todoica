@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "express": "^4.15.2",
+    "request": "*",
     "body-parser": "*"
   },
   "devDependencies": {

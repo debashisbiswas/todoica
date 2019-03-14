@@ -61,7 +61,7 @@ function processHabiticaTodo(title, priority){
     else {
       console.log(response.statusCode);
       console.log(body);
-      taskId = body.data.id;
+      taskId = body.id;
     }
   });
   
@@ -74,7 +74,7 @@ function processHabiticaTodo(title, priority){
     // from Habitica API: score a task with https://habitica.com/api/v3/tasks/:taskId/score/:direction
     // allowed values for direction: "up" or "down"
     var theDirection = "up";
-    let theUri = 'https://habitica.com/api/v3/tasks/' + taskId + '/score/' + theDirection;
+    let theUri = `https://habitica.com/api/v3/tasks/${taskId}/score/${theDirection}`;
     request({
       headers: {
         'x-api-user': process.env.HABITICA_USER,

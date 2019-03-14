@@ -61,7 +61,8 @@ function processHabiticaTodo(title, priority){
     else {
       console.log(response.statusCode);
       console.log(body);
-      taskId = body.id;
+      var parsedBody = JSON.parse(body);
+      taskId = parsedBody.data.id;
     }
   });
   

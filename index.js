@@ -10,12 +10,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.post("/", function (request, response) {
-  console.log("Request received");
+  console.log("Request received.");
   console.log("Data: " + JSON.stringify(request.body));
-  
   console.log("Calling Habitica API...");
   processHabiticaTodo(request.body.title, request.body.priority);
-  console.log("Done triggering.");
   response.end();
 });
 
@@ -43,7 +41,7 @@ function processHabiticaTodo(title, priority){
     theParsedPriority = 1;
   }
   
-  // add the task and check it off in the callback function
+  // add the task and immediately check it off in the callback function
   request({
     headers: {
       'x-api-user': process.env.HABITICA_USER,
@@ -54,8 +52,7 @@ function processHabiticaTodo(title, priority){
     json: true,
     method: 'POST'
   }, function (error, response, body) {
-    console.log(`Add task reponse: ${response.statusCode}, success = ${body.success}`);
-    // console.log(body);
+    console.log(`Add task success = ${body.success}`);
     if(body.success)
     {
       scoreHabiticaTask(body.data._id);
@@ -81,8 +78,7 @@ function scoreHabiticaTask(taskId)
       json: true,
       method: 'POST'
     }, function (error, response, body) {
-      console.log(`Score task reponse: ${response.statusCode}, success = ${body.success}`);
-      // console.log(body);
+      console.log(`Score task success = ${body.success}`);
     });
   }
 }
